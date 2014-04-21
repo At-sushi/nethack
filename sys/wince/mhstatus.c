@@ -118,7 +118,10 @@ LRESULT CALLBACK StatusWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
 			DrawText(hdc, 
 					 NH_A2W(data->window_text, wbuf, MAXWINDOWTEXT),
+/*JP
 					 strlen(data->window_text), 
+*/
+					 -1,
 					 &rt, 
 					 DT_LEFT | DT_NOPREFIX);
 
@@ -181,14 +184,24 @@ void FormatStatusString(char* text, int format)
 
 	Strcpy(text, plname);
 	if('a' <= text[0] && text[0] <= 'z') text[0] += 'A'-'a';
+#if 1 /*JP*/
+	if( is_kanji1(text, 9) )
+		text[9] = '_';
+#endif
 	text[10] = 0;
+/*JP
 	Sprintf(nb = eos(text)," the ");
+*/
+	Sprintf(nb = eos(text)," ");
 
 	if (Upolyd) {
 		char mbot[BUFSZ];
 		int k = 0;
 
+/*JP
 		Strcpy(mbot, mons[u.umonnum].mname);
+*/
+		Strcpy(mbot, jtrns_mon(mons[u.umonnum].mname));
 		while(mbot[k] != 0) {
 		    if ((k == 0 || (k > 0 && mbot[k-1] == ' ')) &&
 					'a' <= mbot[k] && mbot[k] <= 'z')
@@ -203,21 +216,44 @@ void FormatStatusString(char* text, int format)
 
 	if (ACURR(A_STR) > 18) {
 		if (ACURR(A_STR) > STR18(100))
+/*JP
 		    Sprintf(nb = eos(nb),"St:%2d ",ACURR(A_STR)-100);
+*/
+		    Sprintf(nb = eos(nb),"¶¯:%2d ",ACURR(A_STR)-100);
 		else if (ACURR(A_STR) < STR18(100))
+/*JP
 		    Sprintf(nb = eos(nb), "St:18/%02d ",ACURR(A_STR)-18);
+*/
+		    Sprintf(nb = eos(nb), "¶¯:18/%02d ",ACURR(A_STR)-18);
 		else
+/*JP
 		    Sprintf(nb = eos(nb),"St:18/** ");
+*/
+		    Sprintf(nb = eos(nb),"¶¯:18/** ");
 	} else
+/*JP
 		Sprintf(nb = eos(nb), "St:%-1d ",ACURR(A_STR));
+*/
+		Sprintf(nb = eos(nb), "¶¯:%-1d ",ACURR(A_STR));
 	Sprintf(nb = eos(nb),
+/*JP
 		"Dx:%-1d Co:%-1d In:%-1d Wi:%-1d Ch:%-1d",
+*/
+		"Áá:%-1d ÂÑ:%-1d ÃÎ:%-1d ¸­:%-1d Ì¥:%-1d ",
 		ACURR(A_DEX), ACURR(A_CON), ACURR(A_INT), ACURR(A_WIS), ACURR(A_CHA));
+#if 0 /*JP*/
 	Sprintf(nb = eos(nb), (u.ualign.type == A_CHAOTIC) ? "  Chaotic" :
 			(u.ualign.type == A_NEUTRAL) ? "  Neutral" : "  Lawful");
+#else
+	Sprintf(nb = eos(nb), (u.ualign.type == A_CHAOTIC) ? "º®ÆÙ" :
+			(u.ualign.type == A_NEUTRAL) ? "ÃæÎ©" : "Ãá½ø");
+#endif
 #ifdef SCORE_ON_BOTL
 	if (flags.showscore)
+/*JP
 	    Sprintf(nb = eos(nb), " S:%ld", botl_score());
+*/
+	    Sprintf(nb = eos(nb), "%ldÅÀ", botl_score());
 #endif
 	if( format==NHSTAT_LINES_4 ||
 		format==NHSTAT_LINES_2 ) strcat(text, "\r\n");
@@ -229,7 +265,10 @@ void FormatStatusString(char* text, int format)
 	if(hp < 0) hp = 0;
 	(void) describe_level(nb=eos(nb));
 	Sprintf(nb = eos(nb),
+/*JP
 		"%c:%-2ld HP:%d(%d) Pw:%d(%d) AC:%-2d", oc_syms[COIN_CLASS],
+*/
+		"%c:%-2ld ÂÎ:%d(%d) Ëâ:%d(%d) ³»:%-2d", oc_syms[COIN_CLASS],
 #ifndef GOLDOBJ
 		u.ugold,
 #else
@@ -241,21 +280,31 @@ void FormatStatusString(char* text, int format)
 		Sprintf(nb = eos(nb), " HD:%d", mons[u.umonnum].mlevel);
 #ifdef EXP_ON_BOTL
 	else if(flags.showexp)
+/*JP
 		Sprintf(nb = eos(nb), " Xp:%u/%-1ld", u.ulevel,u.uexp);
+*/
+		Sprintf(nb = eos(nb), " ·Ð¸³:%u/%-1ld", u.ulevel,u.uexp);
 #endif
 	else
+/*JP
 		Sprintf(nb = eos(nb), " Exp:%u", u.ulevel);
+*/
+		Sprintf(nb = eos(nb), " ·Ð¸³:%u", u.ulevel);
 	if( format==NHSTAT_LINES_4 ) strcat(text, "\r\n");
 	else                         strcat(text, " ");
 
 	/* forth line */
 	if(flags.time)
+/*JP
 	    Sprintf(nb = eos(nb), "T:%ld ", moves);
+*/
+	    Sprintf(nb = eos(nb), "Êâ:%ld", moves);
 
 	if(strcmp(hu_stat[u.uhs], "        ")) {
 		Strcat(text, hu_stat[u.uhs]);
 		Sprintf(nb = eos(nb), " ");
 	}
+#if 0 /*JP*/
 	if(Confusion)	   Sprintf(nb = eos(nb), "Conf");
 	if(Sick) {
 		if (u.usick_type & SICK_VOMITABLE)
@@ -267,6 +316,19 @@ void FormatStatusString(char* text, int format)
 	if(Stunned)	   Sprintf(nb = eos(nb), " Stun");
 	if(Hallucination)  Sprintf(nb = eos(nb), " Hallu");
 	if(Slimed)         Sprintf(nb = eos(nb), " Slime");
+#else
+	if(Confusion)      Sprintf(nb = eos(nb), " º®Íð");
+	if(Sick) {
+		if (u.usick_type & SICK_VOMITABLE)
+			   Sprintf(nb = eos(nb), " ¿©ÆÇ");
+		if (u.usick_type & SICK_NONVOMITABLE)
+			   Sprintf(nb = eos(nb), " ÉÂµ¤");
+	}
+	if(Blind)          Sprintf(nb = eos(nb), " ÌÕÌÜ");
+	if(Stunned)        Sprintf(nb = eos(nb), " âÁÚô");
+	if(Hallucination)  Sprintf(nb = eos(nb), " ¸¸³Ð");
+	if(Slimed)         Sprintf(nb = eos(nb), " ¤É¤í¤É¤í");
+#endif
 	if(cap > UNENCUMBERED)
 		Sprintf(nb = eos(nb), " %s", enc_stat[cap]);
 }

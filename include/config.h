@@ -14,6 +14,7 @@
  *		provide it (no need to change sec#1, vmsconf.h handles it).
  */
 
+#define JNETHACK
 #define UNIX		/* delete if no fork(), exec() available */
 
 /* #define MSDOS */	/* in case it's not auto-detected */
@@ -114,6 +115,12 @@
 #endif
 
 #ifndef DEFAULT_WINDOW_SYS
+# ifdef X11_GRAPHICS
+#  define DEFAULT_WINDOW_SYS "x11"
+# endif
+#endif
+
+#ifndef DEFAULT_WINDOW_SYS
 # define DEFAULT_WINDOW_SYS "tty"
 #endif
 
@@ -126,9 +133,10 @@
  * would allow:
  *  xpmtoppm <x11tiles.xpm | pnmscale 1.25 | ppmquant 90 >x11tiles_big.xpm
  */
-/* # define USE_XPM */		/* Disable if you do not have the XPM library */
+/*# define USE_XPM*/		/* Disable if you do not have the XPM library */
 # ifdef USE_XPM
 #  define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.xpm) */
+#  define X11LARGETILE		/* Large tile for X11 */
 # endif
 #endif
 
@@ -140,6 +148,12 @@
  *		name.  LOGFILE, NEWS and PANICLOG refer to files in the
  *		playground.
  */
+
+#ifdef JNETHACK
+/*#define NH_EXTENSION*/	/* Some extension for game */
+# define XI18N
+# define INSTALLCOLORMAP
+#endif
 
 #ifndef WIZARD		/* allow for compile-time or Makefile changes */
 # ifndef KR1ED
@@ -169,11 +183,12 @@
 
 #ifdef UNIX
 /* path and file name extension for compression program */
-#define COMPRESS "/usr/bin/compress"	/* Lempel-Ziv compression */
-#define COMPRESS_EXTENSION ".Z"		/* compress's extension */
+/*JP: gzip is common enough */
+/* #define COMPRESS "/usr/bin/compress" */	/* Lempel-Ziv compression */
+/* #define COMPRESS_EXTENSION ".Z" */		/* compress's extension */
 /* An example of one alternative you might want to use: */
-/* #define COMPRESS "/usr/local/bin/gzip" */	/* FSF gzip compression */
-/* #define COMPRESS_EXTENSION ".gz" */		/* normal gzip extension */
+#define COMPRESS "/usr/bin/gzip"	/* FSF gzip compression */
+#define COMPRESS_EXTENSION ".gz"	/* normal gzip extension */
 #endif
 
 #ifndef COMPRESS
@@ -204,7 +219,7 @@
  * otherwise it will be the current directory.
  */
 # ifndef HACKDIR
-#  define HACKDIR "/usr/games/lib/nethackdir"
+#  define HACKDIR "/usr/games/lib/jnethackdir"
 # endif
 
 /*
@@ -339,6 +354,10 @@ typedef unsigned char	uchar;
 
 #define EXP_ON_BOTL	/* Show experience on bottom line */
 /* #define SCORE_ON_BOTL */	/* added by Gary Erickson (erickson@ucivax) */
+
+#ifdef JNETHACK
+/*# define USE_MAKESINGULAR */	/* Enable singularize */
+#endif
 
 /*
  * Section 5:  EXPERIMENTAL STUFF

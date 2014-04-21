@@ -1,0 +1,29 @@
+--- jnethack/src/pickup.c.orig	2011-09-16 04:51:28.000000000 +0900
++++ jnethack/src/pickup.c	2011-11-05 19:26:15.128010018 +0900
+@@ -611,7 +611,7 @@
+ 					an(simple_typename(obj->otyp)), "something"));
+ #else
+ 		    Sprintf(qbuf, "%sを拾いますか？",
+-			safe_qbuf("", sizeof("%sを拾いますか？"), doname(obj),
++			safe_qbuf("", sizeof("を拾いますか？"), doname(obj),
+ 					an(simple_typename(obj->otyp)), "これ"));
+ #endif
+ 		    switch ((obj->quan < 2L) ? ynaq(qbuf) : ynNaq(qbuf)) {
+@@ -1329,7 +1329,7 @@
+ 			(next_encumbr > MOD_ENCUMBER) ? nearloadmsg :
+ 			moderateloadmsg;
+ 		Sprintf(qbuf, "%s%s．続けますか？", 
+-			safe_qbuf(qbuf, strlen(msg) + sizeof("．続けますか？"),
++			safe_qbuf(msg, sizeof("．続けますか？"),
+ 				doname(obj), simple_typename(obj->otyp), "これ"),
+ 			msg);
+ #endif
+@@ -2553,7 +2553,7 @@
+ 		    safe_qbuf(qbuf, 1, yname(obj), ysimple_name(obj), "it"));
+ #else
+ 	    Sprintf(qbuf, "%sから何か取り出しますか？",
+-		    safe_qbuf(qbuf, sizeof("から何か取り出しますか？"), yname(obj), ysimple_name(obj), "そこ"));
++		    safe_qbuf("", sizeof("から何か取り出しますか？"), yname(obj), ysimple_name(obj), "そこ"));
+ #endif
+ 	    if (flags.menu_style != MENU_TRADITIONAL) {
+ 		if (flags.menu_style == MENU_FULL) {

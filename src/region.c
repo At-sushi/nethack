@@ -910,12 +910,24 @@ genericptr_t p2;
 	if (!Blind)
 	    make_blinded(1L, FALSE);
 	if (!Poison_resistance) {
+/*JP
 	    pline("%s is burning your %s!", Something, makeplural(body_part(LUNG)));
+*/
+	    pline("何か妙なものを吸いこんだ！");
+/*JP
 	    You("cough and spit blood!");
+*/
+	    You("咳きこみ，血を吐いた！");
+/*JP
 	    losehp(rnd(dam) + 5, "gas cloud", KILLED_BY_AN);
+*/
+	    losehp(rnd(dam) + 5, "ガス雲で", KILLED_BY_AN);
 	    return FALSE;
 	} else {
+/*JP
 	    You("cough!");
+*/
+	    You("咳きこんだ！");
 	    return FALSE;
 	}
     } else {			/* A monster is inside the cloud */
@@ -924,7 +936,10 @@ genericptr_t p2;
 	/* Non living and non breathing monsters are not concerned */
 	if (!nonliving(mtmp->data) && !breathless(mtmp->data)) {
 	    if (cansee(mtmp->mx, mtmp->my))
+/*JP
 		pline("%s coughs!", Monnam(mtmp));
+*/
+		pline("%sは咳きこんだ！", Monnam(mtmp));
 	    setmangry(mtmp);
 	    if (haseyes(mtmp->data) && mtmp->mcansee) {
 		mtmp->mblinded = 1;
@@ -937,7 +952,10 @@ genericptr_t p2;
 		if (heros_fault(reg))
 		    killed(mtmp);
 		else
+/*JP
 		    monkilled(mtmp, "gas cloud", AD_DRST);
+*/
+		    monkilled(mtmp, "ガス雲", AD_DRST);
 		if (mtmp->mhp <= 0) {	/* not lifesaved */
 		    return TRUE;
 		}

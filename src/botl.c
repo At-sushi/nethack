@@ -2,18 +2,34 @@
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /* NetHack may be freely redistributed.  See license for details. */
 
+/*
+**	Japanese version Copyright
+**	(c) Issei Numata, Naoki Hamada, Shigehiro Miyashita, 1994-2000
+**	For 3.4, Copyright (c) Kentaro Shirakata, 2002-2003
+**	JNetHack may be freely redistributed.  See license for details. 
+*/
+
 #include "hack.h"
 
 #ifdef OVL0
 extern const char *hu_stat[];	/* defined in eat.c */
 
 const char * const enc_stat[] = {
+#if 0 /*JP*/
 	"",
 	"Burdened",
 	"Stressed",
 	"Strained",
 	"Overtaxed",
 	"Overloaded"
+#else
+	"",
+	"¤è¤í¤á¤­",
+	"°µÇ÷",
+	"¸Â³¦",
+	"²Ù½Å",
+	"Ä¶²á"
+#endif
 };
 
 STATIC_DCL void NDECL(bot1);
@@ -174,14 +190,24 @@ bot1()
 
 	Strcpy(newbot1, plname);
 	if('a' <= newbot1[0] && newbot1[0] <= 'z') newbot1[0] += 'A'-'a';
+#if 1 /*JP*/
+	if(is_kanji1(newbot1, 9))
+		newbot1[9] = '_';
+#endif
 	newbot1[10] = 0;
+/*JP
 	Sprintf(nb = eos(newbot1)," the ");
+*/
+	Sprintf(nb = eos(newbot1)," ");
 
 	if (Upolyd) {
 		char mbot[BUFSZ];
 		int k = 0;
 
+/*JP
 		Strcpy(mbot, mons[u.umonnum].mname);
+*/
+		Strcpy(mbot, jtrns_mon_gen(mons[u.umonnum].mname, flags.female));
 		while(mbot[k] != 0) {
 		    if ((k == 0 || (k > 0 && mbot[k-1] == ' ')) &&
 					'a' <= mbot[k] && mbot[k] <= 'z')
@@ -199,21 +225,45 @@ bot1()
 		Sprintf(nb = eos(nb),"%*s", i-j, " ");	/* pad with spaces */
 	if (ACURR(A_STR) > 18) {
 		if (ACURR(A_STR) > STR18(100))
+/*JP
 		    Sprintf(nb = eos(nb),"St:%2d ",ACURR(A_STR)-100);
+*/
+		    Sprintf(nb = eos(nb),"¶¯:%2d ",ACURR(A_STR)-100);
 		else if (ACURR(A_STR) < STR18(100))
+/*JP
 		    Sprintf(nb = eos(nb), "St:18/%02d ",ACURR(A_STR)-18);
+*/
+		    Sprintf(nb = eos(nb), "¶¯:18/%02d ",ACURR(A_STR)-18);
 		else
+#if 0 /*JP*/
 		    Sprintf(nb = eos(nb),"St:18/** ");
+#else
+		    Sprintf(nb = eos(nb),"¶¯:18/** ");
+#endif
 	} else
+/*JP
 		Sprintf(nb = eos(nb), "St:%-1d ",ACURR(A_STR));
+*/
+		Sprintf(nb = eos(nb), "¶¯:%-1d ",ACURR(A_STR));
 	Sprintf(nb = eos(nb),
+/*JP
 		"Dx:%-1d Co:%-1d In:%-1d Wi:%-1d Ch:%-1d",
+*/
+		"Áá:%-1d ÂÑ:%-1d ÃÎ:%-1d ¸­:%-1d Ì¥:%-1d ",
 		ACURR(A_DEX), ACURR(A_CON), ACURR(A_INT), ACURR(A_WIS), ACURR(A_CHA));
+#if 0 /*JP*/
 	Sprintf(nb = eos(nb), (u.ualign.type == A_CHAOTIC) ? "  Chaotic" :
 			(u.ualign.type == A_NEUTRAL) ? "  Neutral" : "  Lawful");
+#else
+	Sprintf(nb = eos(nb), (u.ualign.type == A_CHAOTIC) ? "º®ÆÙ" :
+			(u.ualign.type == A_NEUTRAL) ? "ÃæÎ©" : "Ãá½ø");
+#endif
 #ifdef SCORE_ON_BOTL
 	if (flags.showscore)
+/*JP
 	    Sprintf(nb = eos(nb), " S:%ld", botl_score());
+*/
+	    Sprintf(nb = eos(nb), "%ldÅÀ", botl_score());
 #endif
 	curs(WIN_STATUS, 1, 0);
 	putstr(WIN_STATUS, 0, newbot1);
@@ -228,15 +278,27 @@ char *buf;
 
 	/* TODO:	Add in dungeon name */
 	if (Is_knox(&u.uz))
+/*JP
 		Sprintf(buf, "%s ", dungeons[u.uz.dnum].dname);
+*/
+		Sprintf(buf, "%s ", jtrns_obj('d', dungeons[u.uz.dnum].dname));
 	else if (In_quest(&u.uz))
+/*JP
 		Sprintf(buf, "Home %d ", dunlev(&u.uz));
+*/
+		Sprintf(buf, "¸Î¶¿ %d ", dunlev(&u.uz));
 	else if (In_endgame(&u.uz))
 		Sprintf(buf,
+/*JP
 			Is_astralevel(&u.uz) ? "Astral Plane " : "End Game ");
+*/
+			Is_astralevel(&u.uz) ? "ÀºÎî³¦ " : "ºÇ½ª»îÎý ");
 	else {
 		/* ports with more room may expand this one */
+/*JP
 		Sprintf(buf, "Dlvl:%-2d ", depth(&u.uz));
+*/
+		Sprintf(buf, "ÃÏ²¼:%-2d ", depth(&u.uz));
 		ret = 0;
 	}
 	return ret;
@@ -256,7 +318,10 @@ bot2()
 	if(hp < 0) hp = 0;
 	(void) describe_level(newbot2);
 	Sprintf(nb = eos(newbot2),
+/*JP
 		"%c:%-2ld HP:%d(%d) Pw:%d(%d) AC:%-2d", oc_syms[COIN_CLASS],
+*/
+		"%c:%-2ld ÂÎ:%d(%d) Ëâ:%d(%d) ³»:%-2d", oc_syms[COIN_CLASS],
 #ifndef GOLDOBJ
 		u.ugold,
 #else
@@ -268,28 +333,58 @@ bot2()
 		Sprintf(nb = eos(nb), " HD:%d", mons[u.umonnum].mlevel);
 #ifdef EXP_ON_BOTL
 	else if(flags.showexp)
+/*JP
 		Sprintf(nb = eos(nb), " Xp:%u/%-1ld", u.ulevel,u.uexp);
+*/
+		Sprintf(nb = eos(nb), " ·Ð¸³:%u/%-1ld", u.ulevel,u.uexp);
 #endif
 	else
+/*JP
 		Sprintf(nb = eos(nb), " Exp:%u", u.ulevel);
+*/
+		Sprintf(nb = eos(nb), " ·Ð¸³:%u", u.ulevel);
 
 	if(flags.time)
+/*JP
 	    Sprintf(nb = eos(nb), " T:%ld", moves);
+*/
+	    Sprintf(nb = eos(nb), " Êâ:%ld", moves);
 	if(strcmp(hu_stat[u.uhs], "        ")) {
 		Sprintf(nb = eos(nb), " ");
 		Strcat(newbot2, hu_stat[u.uhs]);
 	}
+/*JP
 	if(Confusion)	   Sprintf(nb = eos(nb), " Conf");
+*/
+	if(Confusion)      Sprintf(nb = eos(nb), " º®Íð");
 	if(Sick) {
 		if (u.usick_type & SICK_VOMITABLE)
+/*JP
 			   Sprintf(nb = eos(nb), " FoodPois");
+*/
+			   Sprintf(nb = eos(nb), " ¿©ÆÇ");
 		if (u.usick_type & SICK_NONVOMITABLE)
+/*JP
 			   Sprintf(nb = eos(nb), " Ill");
+*/
+			   Sprintf(nb = eos(nb), " ÉÂµ¤");
 	}
+/*JP
 	if(Blind)	   Sprintf(nb = eos(nb), " Blind");
+*/
+	if(Blind)          Sprintf(nb = eos(nb), " ÌÕÌÜ");
+/*JP
 	if(Stunned)	   Sprintf(nb = eos(nb), " Stun");
+*/
+	if(Stunned)        Sprintf(nb = eos(nb), " âÁÚô");
+/*JP
 	if(Hallucination)  Sprintf(nb = eos(nb), " Hallu");
+*/
+	if(Hallucination)  Sprintf(nb = eos(nb), " ¸¸³Ð");
+/*JP
 	if(Slimed)         Sprintf(nb = eos(nb), " Slime");
+*/
+	if(Slimed)         Sprintf(nb = eos(nb), " ¤É¤í¤É¤í");
 	if(cap > UNENCUMBERED)
 		Sprintf(nb = eos(nb), " %s", enc_stat[cap]);
 	curs(WIN_STATUS, 1, 1);

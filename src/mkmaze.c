@@ -2,6 +2,13 @@
 /* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
 /* NetHack may be freely redistributed.  See license for details. */
 
+/*
+**	Japanese version Copyright
+**	(c) Issei Numata, Naoki Hamada, Shigehiro Miyashita, 1994-2000
+**	For 3.4, Copyright (c) Kentaro Shirakata, 2002-2003
+**	JNetHack may be freely redistributed.  See license for details. 
+*/
+
 #include "hack.h"
 #include "sp_lev.h"
 #include "lev.h"	/* save & restore info */
@@ -1084,7 +1091,10 @@ water_friction()
 		u.dx = dx;
 		eff = TRUE;
 	}
+/*JP
 	if (eff) pline("Water turbulence affects your movements.");
+*/
+	if (eff) pline("水の流れがあなたの動きに影響を与えた．");
 }
 
 void
@@ -1156,20 +1166,38 @@ xchar x,y;
 	ltyp = lev->typ;
 
 	if (is_lava(x,y))
+/*JP
 		return "lava";
+*/
+		return "溶岩";
 	else if (ltyp == ICE ||
 		 (ltyp == DRAWBRIDGE_UP &&
 		  (levl[x][y].drawbridgemask & DB_UNDER) == DB_ICE))
+/*JP
 		return "ice";
+*/
+		return "氷";
 	else if (((ltyp != POOL) && (ltyp != WATER) &&
 	  !Is_medusa_level(&u.uz) && !Is_waterlevel(&u.uz) && !Is_juiblex_level(&u.uz)) ||
 	   (ltyp == DRAWBRIDGE_UP && (levl[x][y].drawbridgemask & DB_UNDER) == DB_MOAT))
+/*JP
 		return "moat";
+*/
+		return "堀";
 	else if ((ltyp != POOL) && (ltyp != WATER) && Is_juiblex_level(&u.uz))
+/*JP
 		return "swamp";
+*/
+		return "沼";
 	else if (ltyp == POOL)
+/*JP
 		return "pool of water";
+*/
+		return "水たまり";
+/*JP
 	else return "water";
+*/
+	else return "水中";
 }
 
 STATIC_OVL void
