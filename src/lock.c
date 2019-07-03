@@ -789,7 +789,7 @@ doopen()		/* try to open a door */
 	}
 
 	/* door is known to be CLOSED */
-	if (rnl(20) < (ACURRSTR+ACURR(A_DEX)+ACURR(A_CON))/3) {
+	if (rnl(5) < (ACURRSTR+ACURR(A_DEX)+ACURR(A_CON))/3) {
 /*JP
 	    pline_The("door opens.");
 */
