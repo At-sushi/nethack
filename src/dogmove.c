@@ -314,13 +314,10 @@ int udist;
 #else
 	if(DROPPABLES(mtmp)) {
 #endif
-	    if (!rn2(udist+1) || !rn2(edog->apport))
-		if(rn2(10) < edog->apport){
-		    relobj(mtmp, (int)mtmp->minvis, TRUE);
-		    if(edog->apport > 1) edog->apport--;
-		    edog->dropdist = udist;		/* hpscdi!jon */
-		    edog->droptime = monstermoves;
-		}
+	    relobj(mtmp, (int)mtmp->minvis, TRUE);
+	    if(edog->apport > 1) edog->apport--;
+	    edog->dropdist = udist;		/* hpscdi!jon */
+	    edog->droptime = monstermoves;
 	} else {
 	    if((obj=level.objects[omx][omy]) && !index(nofetch,obj->oclass)
 #ifdef MAIL

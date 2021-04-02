@@ -520,7 +520,9 @@ boolean pets_only;	/* true for ascension or final escape */
 	    mtmp2 = mtmp->nmon;
 	    if (DEADMONSTER(mtmp)) continue;
 	    if (pets_only && !mtmp->mtame) continue;
-	    if (((monnear(mtmp, u.ux, u.uy) && levl_follower(mtmp)) ||
+	    if ((((monnear(mtmp, u.ux, u.uy) ||
+                  (levl[u.ux][u.uy].typ == ROOM && levl[mtmp->mx][mtmp->my].typ == ROOM && levl[u.ux][u.uy].roomno == levl[mtmp->mx][mtmp->mx].roomno)) &&
+levl_follower(mtmp)) ||
 #ifdef STEED
 			(mtmp == u.usteed) ||
 #endif

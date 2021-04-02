@@ -333,7 +333,7 @@ typedef unsigned char	uchar;
 /* dungeon features */
 #define SINKS		/* Kitchen sinks - Janet Walz */
 /* dungeon levels */
-#define WALLIFIED_MAZE	/* Fancy mazes - Jean-Christophe Collet */
+/* #define WALLIFIED_MAZE */	/* Fancy mazes - Jean-Christophe Collet */
 #define REINCARNATION	/* Special Rogue-like levels */
 /* monsters & objects */
 #define KOPS		/* Keystone Kops by Scott R. Turner */
