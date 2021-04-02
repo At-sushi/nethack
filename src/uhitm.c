@@ -345,7 +345,7 @@ register struct monst *mtmp;
 		 * there's also a chance of displacing a "frozen" monster.
 		 * sleeping monsters might magically walk in their sleep.
 		 */
-		boolean foo = (Punished || !rn2(7) || is_longworm(mtmp->data)),
+		boolean foo = (Punished || is_longworm(mtmp->data)),
 			inshop = FALSE;
 		char *p;
 
